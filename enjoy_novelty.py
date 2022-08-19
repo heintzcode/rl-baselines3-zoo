@@ -76,7 +76,7 @@ def main():  # noqa: C901
     args = parser.parse_args()
 
     if args.wandb_project_name:
-        run_name = f"{args.test_env}__{args.train_env}__{args.algo}__{args.seed}__{args.n_timesteps}"
+        run_name = f"{args.test_env}_{args.train_env}_{args.algo}_{args.n_timesteps}"
         run = wandb.init(
             name = run_name,
             project = args.wandb_project_name,
@@ -264,13 +264,19 @@ def main():  # noqa: C901
                         print(f"Atari Episode Score: {episode_infos['r']:.2f}")
                         print("Atari Episode Length", episode_infos["l"])
 
-                if done and not is_atari and args.verbose > 0:
-                    # NOTE: for env using VecNormalize, the mean reward
-                    # is a normalized reward when `--norm_reward` flag is passed
-                    print(f"Episode Reward: {episode_reward:.2f}")
-                    print("Episode Length", ep_len)
-                    episode_rewards.append(episode_reward)
-                    episode_lengths.append(ep_len)
+
+                if done and not is_atari:
+                    wandb.log({'episode_reward': episode_reward,
+                               'episode_length': ep_len})
+                    
+                    if args.verbose > 0:
+                        # NOTE: for env using VecNormalize, the mean reward
+                        # is a normalized reward when `--norm_reward` flag is passed
+                        print(f"Episode Reward: {episode_reward:.2f}")
+                        print("Episode Length", ep_len)
+                        episode_rewards.append(episode_reward)
+                        episode_lengths.append(ep_len)
+
                     episode_reward = 0.0
                     ep_len = 0
 
@@ -286,6 +292,7 @@ def main():  # noqa: C901
     except KeyboardInterrupt:
         pass
 
+    
     if args.verbose > 0 and len(successes) > 0:
         print(f"Success rate: {100 * np.mean(successes):.2f}%")
 
