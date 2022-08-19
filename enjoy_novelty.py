@@ -3,6 +3,7 @@ import importlib
 import os
 import sys
 import gym
+import wandb
 
 import numpy as np
 import torch as th
@@ -69,9 +70,22 @@ def main():  # noqa: C901
     parser.add_argument(
         "--custom-objects", action="store_true", default=False, help="Use custom objects to solve loading issues"
     )
+    parser.add_argument("--wandb-project-name", type=str, default=None, help="the wandb's project name")
+    parser.add_argument("--wandb-entity", type=str, default=None, help="the entity (team) of wandb's project")
 
     args = parser.parse_args()
 
+    if args.wandb_project_name:
+        run_name = f"{args.test_env}__{args.train_env}__{args.algo}__{args.seed}__{args.n_timesteps}"
+        run = wandb.init(
+            name = run_name,
+            project = args.wandb_project_name,
+            entity = args.wandb_entity,
+            config = vars(args),
+            sync_tensorboard = False,
+            save_code=True,
+        )
+        
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
