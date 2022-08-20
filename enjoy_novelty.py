@@ -23,6 +23,7 @@ def main():  # noqa: C901
     parser = argparse.ArgumentParser()
     parser.add_argument("--train_env", help="training environment ID", type=EnvironmentName, default="Humanoid-v3")
     parser.add_argument("--test_env", help="testing environment ID", type=EnvironmentName, default="humanoid")
+    parser.add_argument("--test_env_config", help="config file for test environment", type=str)
     parser.add_argument("-f", "--folder", help="Log folder", type=str, default="rl-trained-agents")
     parser.add_argument("--algo", help="RL Algorithm", default="ppo", type=str, required=False, choices=list(ALGOS.keys()))
     parser.add_argument("-n", "--n-timesteps", help="number of timesteps", default=1000, type=int)
@@ -176,6 +177,8 @@ def main():  # noqa: C901
 
     test_env_name: EnvironmentName = args.test_env 
 
+    test_env_kwargs = {'model_path': args.test_env_config}
+
     test_env = create_test_env(
         test_env_name.gym_id,
         n_envs=args.n_envs,
@@ -184,7 +187,7 @@ def main():  # noqa: C901
         log_dir=log_dir,
         should_render=not args.no_render,
         hyperparams=hyperparams,
-        env_kwargs=env_kwargs,
+        env_kwargs=test_env_kwargs,
     )
 
     kwargs = dict(seed=args.seed)
