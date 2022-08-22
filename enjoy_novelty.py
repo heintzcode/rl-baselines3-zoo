@@ -24,6 +24,7 @@ def main():  # noqa: C901
     parser.add_argument("--train_env", help="training environment ID", type=EnvironmentName, default="Humanoid-v3")
     parser.add_argument("--test_env", help="testing environment ID", type=EnvironmentName, default="humanoid")
     parser.add_argument("--test_env_config", help="config file for test environment", type=str)
+    parser.add_argument("--output_file", help="file to write output to disk", type=str)
     parser.add_argument("-f", "--folder", help="Log folder", type=str, default="rl-trained-agents")
     parser.add_argument("--algo", help="RL Algorithm", default="ppo", type=str, required=False, choices=list(ALGOS.keys()))
     parser.add_argument("-n", "--n-timesteps", help="number of timesteps", default=1000, type=int)
@@ -295,7 +296,13 @@ def main():  # noqa: C901
     except KeyboardInterrupt:
         pass
 
-    
+
+    with open(args.output_file, 'w') as outf:
+        outf.write("MeanReward: {:.2f}\n".format(np.mean(episode_rewards)))
+        outf.write("StdDev: {:.2f}\n".format(np.std(episode_rewards)))
+        outf.write("MeanLength: {:.2f}\n".format(np.mean(episode_lengths)))
+        outf.write("StdDev: {:.2f}\n".format(np.std(episode_lengths)))
+        
     if args.verbose > 0 and len(successes) > 0:
         print(f"Success rate: {100 * np.mean(successes):.2f}%")
 
