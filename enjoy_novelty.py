@@ -74,11 +74,15 @@ def main():  # noqa: C901
     )
     parser.add_argument("--wandb-project-name", type=str, default=None, help="the wandb's project name")
     parser.add_argument("--wandb-entity", type=str, default=None, help="the entity (team) of wandb's project")
-
+    parser.add_argument("--evo_expt_name", type=str, default=None, help="experiment name coming from evolutionary algorithm expt manager")
+    parser.add_argument("--gen_branch_mut", type=str, default=None, help="the generation, branch, and mutation of the current configuration file")
     args = parser.parse_args()
 
     if args.wandb_project_name:
-        run_name = f"{args.test_env}_{args.train_env}_{args.algo}_{args.n_timesteps}"
+        if args.evo_expt_name:
+            run_name = f"{args.evo_expt_name}_{args.gen_branch_mut}"
+        else:
+            run_name = f"{args.train_env}_{args.test_env}_{args.algo}"
         run = wandb.init(
             name = run_name,
             project = args.wandb_project_name,
