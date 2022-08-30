@@ -91,6 +91,8 @@ def main():  # noqa: C901
             sync_tensorboard = False,
             save_code=True,
         )
+    else:
+        run = None
         
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
@@ -274,8 +276,9 @@ def main():  # noqa: C901
 
 
                 if done and not is_atari:
-                    wandb.log({'episode_reward': episode_reward,
-                               'episode_length': ep_len})
+                    if run is not None:
+                        wandb.log({'episode_reward': episode_reward,
+                                   'episode_length': ep_len})
                     
                     if args.verbose > 0:
                         # NOTE: for env using VecNormalize, the mean reward
