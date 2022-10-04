@@ -1,4 +1,44 @@
+## Release 1.6.2 (2022-10-02)
+
+### Breaking Changes
+- RL Zoo is now a python package
+- low pass filter was removed
+
+### New Features
+- RL Zoo cli: `rl_zoo3 train` and `rl_zoo3 enjoy`
+
+### Bug fixes
+
+### Documentation
+
+### Other
+
+## Release 1.6.1 (2022-09-30)
+
+**Progress bar and custom yaml file**
+
+### Breaking Changes
+- Upgraded to Stable-Baselines3 (SB3) >= 1.6.1
+- Upgraded to sb3-contrib >= 1.6.1
+
+### New Features
+- Added `--yaml-file` argument option for `train.py`to read hyperparameters from custom yaml files (@JohannesUl)
+
+### Bug fixes
+- Added `custom_object` parameter on record_video.py (@Affonso-Gui)
+- Changed `optimize_memory_usage` to `False` for DQN/QR-DQN on record_video.py (@Affonso-Gui)
+- In `ExperimentManager` `_maybe_normalize` set `training` to `False` for eval envs,
+  to prevent normalization stats from being updated in eval envs (e.g. in EvalCallback) (@pchalasani).
+- Only one env is used to get the action space while optimizing hyperparameters and it is correctly closed (@SammyRamone)
+- Added progress bar via the `-P` argument using tqdm and rich
+
+### Documentation
+
+### Other
+
 ## Release 1.6.0 (2022-08-05)
+
+**RecurrentPPO (ppo_lstm) and Huggingface integration**
 
 ### Breaking Changes
 - Change default value for number of hyperparameter optimization trials from 10 to 500. (@ernestum)

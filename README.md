@@ -32,6 +32,12 @@ If the environment exists in this file, then you can train an agent using:
 ```
 python train.py --algo algo_name --env env_id
 ```
+You can use `-P` (`--progress`) option to display a progress bar.
+
+Using a custom yaml file (which contains a `env_id` entry):
+```
+python train.py --algo algo_name --env env_id --yaml-file my_yaml.yml
+```
 
 For example (with tensorboard support):
 ```
@@ -106,7 +112,7 @@ Remark: plotting with the `--rliable` option is usually slow as confidence inter
 
 ## Custom Environment
 
-The easiest way to add support for a custom environment is to edit `utils/import_envs.py` and register your environment here. Then, you need to add a section for it in the hyperparameters file (`hyperparams/algo.yml`).
+The easiest way to add support for a custom environment is to edit `utils/import_envs.py` and register your environment here. Then, you need to add a section for it in the hyperparameters file (`hyperparams/algo.yml` or a custom yaml file that you can specify using `--yaml-file` argument).
 
 ## Enjoy a Trained Agent
 
@@ -148,13 +154,13 @@ python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 1 --load-last-ch
 
 Upload model to hub (same syntax as for `enjoy.py`):
 ```
-python -m utils.push_to_hub --algo ppo --env CartPole-v1 -f logs/ -orga sb3 -m "Initial commit"
+python -m rl_zoo3.push_to_hub --algo ppo --env CartPole-v1 -f logs/ -orga sb3 -m "Initial commit"
 ```
 you can choose custom `repo-name` (default: `{algo}-{env_id}`) by passing a `--repo-name` argument.
 
 Download model from hub:
 ```
-python -m utils.load_from_hub --algo ppo --env CartPole-v1 -f logs/ -orga sb3
+python -m rl_zoo3.load_from_hub --algo ppo --env CartPole-v1 -f logs/ -orga sb3
 ```
 
 ## Hyperparameter yaml syntax
@@ -249,7 +255,7 @@ for multiple, specify a list:
 
 ```yaml
 env_wrapper:
-    - utils.wrappers.DoneOnSuccessWrapper:
+    - rl_zoo3.wrappers.DoneOnSuccessWrapper:
         reward_offset: 1.0
     - sb3_contrib.common.wrappers.TimeFeatureWrapper
 ```
@@ -273,7 +279,7 @@ Following the same syntax as env wrappers, you can also add custom callbacks to 
 
 ```yaml
 callback:
-  - utils.callbacks.ParallelTrainCallback:
+  - rl_zoo3.callbacks.ParallelTrainCallback:
       gradient_steps: 256
 ```
 
@@ -300,19 +306,19 @@ Note: if you want to pass a string, you need to escape it like that: `my_string:
 Record 1000 steps with the latest saved model:
 
 ```
-python -m utils.record_video --algo ppo --env BipedalWalkerHardcore-v3 -n 1000
+python -m rl_zoo3.record_video --algo ppo --env BipedalWalkerHardcore-v3 -n 1000
 ```
 
 Use the best saved model instead:
 
 ```
-python -m utils.record_video --algo ppo --env BipedalWalkerHardcore-v3 -n 1000 --load-best
+python -m rl_zoo3.record_video --algo ppo --env BipedalWalkerHardcore-v3 -n 1000 --load-best
 ```
 
 Record a video of a checkpoint saved during training (here the checkpoint name is `rl_model_10000_steps.zip`):
 
 ```
-python -m utils.record_video --algo ppo --env BipedalWalkerHardcore-v3 -n 1000 --load-checkpoint 10000
+python -m rl_zoo3.record_video --algo ppo --env BipedalWalkerHardcore-v3 -n 1000 --load-checkpoint 10000
 ```
 
 ## Record a Video of a Training Experiment
@@ -322,18 +328,18 @@ Apart from recording videos of specific saved models, it is also possible to rec
 Record 1000 steps for each checkpoint, latest and best saved models:
 
 ```
-python -m utils.record_training --algo ppo --env CartPole-v1 -n 1000 -f logs --deterministic
+python -m rl_zoo3.record_training --algo ppo --env CartPole-v1 -n 1000 -f logs --deterministic
 ```
 
 The previous command will create a `mp4` file. To convert this file to `gif` format as well:
 
 ```
-python -m utils.record_training --algo ppo --env CartPole-v1 -n 1000 -f logs --deterministic --gif
+python -m rl_zoo3.record_training --algo ppo --env CartPole-v1 -n 1000 -f logs --deterministic --gif
 ```
 
 ## Current Collection: 195+ Trained Agents!
 
-Final performance of the trained agents can be found in [`benchmark.md`](./benchmark.md). To compute them, simply run `python -m utils.benchmark`.
+Final performance of the trained agents can be found in [`benchmark.md`](./benchmark.md). To compute them, simply run `python -m rl_zoo3.benchmark`.
 
 List and videos of trained agents can be found on our Huggingface page: https://huggingface.co/sb3
 
