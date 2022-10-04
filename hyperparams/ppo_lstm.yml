@@ -403,7 +403,7 @@ Hopper-v3:
                     net_arch=[dict(pi=[256, 256], vf=[256, 256])]
                   )"
 
-HumanoidStandup-v3:
+HumanoidStandup-v2:
   normalize: true
   n_envs: 1
   policy: 'MlpLstmPolicy'
